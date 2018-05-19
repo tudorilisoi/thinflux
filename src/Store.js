@@ -82,7 +82,7 @@ class Store {
         const {subscriptionsByPath, subscribers} = this
         const sub = subscribers[uid]
         delete subscribers[uid]
-        for (pathStr of sub.pathsArr) {
+        for (let pathStr of sub.pathsArr) {
             console.log('UNSUB', uid, pathStr);
             let index = subscriptionsByPath[pathStr].indexOf(sub)
             if (index > -1) {
