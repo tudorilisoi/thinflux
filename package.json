@@ -1,6 +1,10 @@
 {
   "name": "thinflux",
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tudorilisoi/thinflux"
+  },
   "description": "A reactive JS store for managing tree-shaped (deep, nested) state",
   "main": "index.js",
   "scripts": {
