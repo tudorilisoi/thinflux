@@ -11,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist 2>&1; mkdir -p dist/browser",
-    "build-babel": "npx babel src --out-dir dist",
+    "build-babel": "babel src --out-dir dist",
     "build-browser": "browserify dist/Store.js > dist/browser/Store.js && uglifyjs dist/browser/Store.js -c -m -o dist/browser/Store.min.js",
     "build": "npm run clean && npm run build-babel && npm run build-browser"
   },

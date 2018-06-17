@@ -65,6 +65,12 @@ class Store {
         this.notify(pathStr)
     }
 
+    merge(pathStr, valueObj) {
+        const current = this.get(pathStr)
+        const merged = {...current, ...valueObj}
+        return this.set(pathStr, merged)
+    }
+
     addPath(pathStr, initialValue) {
         const segments = splitPath(pathStr)
         const l = segments.length
