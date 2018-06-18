@@ -75,7 +75,7 @@ class Connect extends React.Component {
 
         const {opts, component} = this.props.__connect
 
-        this.unsub = this.store.subscribe(paths, (values, mutations) => {
+        this.subscriptionID = this.store.subscribe(paths, (values, mutations) => {
                 if (!this.mounted) {
                     return
                 }
@@ -133,8 +133,8 @@ class Connect extends React.Component {
 
     componentWillUnmount() {
         this.mounted = false
-        if (this.unsub) {
-            this.unsub()
+        if (this.subscriptionID) {
+            store.unsubscribe(this.subscriptionID)
         }
     }
 

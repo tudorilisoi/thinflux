@@ -111,7 +111,8 @@ class Store {
             subscriptionsByPath[pathStr] = subscriptionsByPath[pathStr] || []
             subscriptionsByPath[pathStr].push(sub)
         })
-        return this.unsubscribe.bind(this, uid)
+        // return this.unsubscribe.bind(this, uid)
+        return uid
     }
 
     notify(pathStr) {
