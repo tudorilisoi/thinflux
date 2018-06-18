@@ -1,7 +1,7 @@
-import connect from './connect'
+import connectstore from './connectstore'
 import Store from './Store'
 
-export {connect}
+export {connectstore}
 export {Store}
 
 //TODO move these into the Store classs
