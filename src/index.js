@@ -32,6 +32,7 @@ export function createStore(...args) {
     return {
         store,
         createSetter: createSetter.bind(null, store),
+        createMergeSetter: createMergeSetter.bind(null, store),
         createGetter: createGetter.bind(null, store),
     }
 }
