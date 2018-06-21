@@ -24,12 +24,12 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) =
         // connectComponent: ConnectStore,
         construct: hoc => {
             console.log('CONNECT_STORE CONSTRUCT')
-            const initial = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj))
+            const initial = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj), hoc)
             hoc.state = initial
         },
         didMount: hoc => {
             hoc.subID = store.subscribe(paths, values => {
-                const newState = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj))
+                const newState = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj), hoc)
                 hoc.setState(newState)
             })
         },
