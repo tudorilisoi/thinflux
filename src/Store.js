@@ -31,12 +31,20 @@ class Store {
         this.subscribers = {}
     }
 
+    /**
+     * gets the value for a path ('.' separated list of segments e.g.'author.name')
+     *
+     * NOTE: all but the last segment will throw if it does not exist in the state tree
+     *
+     * @param {(string|string[])} pathStr
+     * @returns {*}
+     */
     get(pathStr) {
         if (!pathStr) {
             return this.jso
         }
         if (_.isArray(pathStr)) {
-            let ret = {}
+            const ret = {}
             pathStr.forEach(_pathStr => ret[_pathStr] = this.get(_pathStr))
             return ret
         }
