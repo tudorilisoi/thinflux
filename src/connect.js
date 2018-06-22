@@ -17,6 +17,11 @@ export class Connect extends React.Component {
 
 
     shouldComponentUpdate(nextProps, nextState) {
+
+        if (nextProps === null) {
+            return false
+        }
+
         const {props: {componentProps}, state} = this
         // return true
         return !shallowEqual(state, nextState) ||
@@ -44,7 +49,7 @@ export default function connect(config) {
     const hoc = props => {
         return (<Connect config={config} componentProps={props}/>)
     }
-    hoc.displayName = `connect(${config.Component.displayName || config.Component.name})`;
+    hoc.displayName = `connect[${config.Component.displayName || config.Component.name}]`;
     return hoc
 }
 

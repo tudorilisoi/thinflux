@@ -43,9 +43,15 @@ class Store {
         return this.getSegment(pathStr).value()
     }
 
-    set(pathStr, value) {
+    set(pathStr, value, opts = {}) {
         const s = this.getSegment(pathStr)
         const prev = s.value()
+        if (opts.deepCompare) {
+            if (_.isEqual(prev, value)) {
+                console.log('SET: deepCompare NOOP', pathStr, value);
+                return
+            }
+        }
         if (prev === value) {
             console.log('SET: NOOP', pathStr, value);
             return
@@ -65,10 +71,13 @@ class Store {
         this.notify(pathStr)
     }
 
-    merge(pathStr, valueObj) {
+    merge(pathStr, valueObj, opts = {}) {
         const current = this.get(pathStr)
-        const merged = {...current, ...valueObj}
-        return this.set(pathStr, merged)
+        //const merged = {...current, ...valueObj}
+        //return this.set(pathStr, merged, opts)
+        Object.keys(valueObj).forEach(key => {
+            this.set(`${pathStr}.${key}`, valueObj[key])
+        })
     }
 
     addPath(pathStr, initialValue) {

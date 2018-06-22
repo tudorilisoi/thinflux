@@ -14,23 +14,42 @@ function mapKeyedPathsToStoreValues(store, pathsObj) {
     return ret
 }
 
+
+function normalizePaths(pathsObj, hoc) {
+    if (typeof pathsObj === 'function') {
+        return pathsObj(hoc)
+    }
+    return pathsObj
+}
+
 const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) => {
-
-
-    const paths = Object.values(pathsObj)
 
     const config = {
         Component: Component,
         // connectComponent: ConnectStore,
         construct: hoc => {
-            console.log('CONNECT_STORE CONSTRUCT')
-            const initial = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj), hoc)
+            const paths = normalizePaths(pathsObj, hoc)
+            const initial = mapValuesToProps(
+                mapKeyedPathsToStoreValues(
+                    store,
+                    paths
+                ), hoc, true)
             hoc.state = initial
         },
         didMount: hoc => {
-            hoc.subID = store.subscribe(paths, values => {
-                const newState = mapValuesToProps(mapKeyedPathsToStoreValues(store, pathsObj), hoc)
-                hoc.setState(newState)
+            const paths = normalizePaths(pathsObj, hoc)
+
+            hoc.subID = store.subscribe(Object.values(paths), values => {
+                const newState = mapValuesToProps(
+                    mapKeyedPathsToStoreValues(
+                        store,
+                        paths),
+                    hoc, false)
+
+                // if the mapper function returned null this is a no-op
+                if (newState !== null) {
+                    hoc.setState(newState)
+                }
             })
         },
         willUnmount: hoc => {
@@ -38,7 +57,7 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) =
         }
     }
     const hoc = connect(config)
-    hoc.displayName = `connectstore(${config.Component.displayName || config.Component.name})`;
+    hoc.displayName = `connectstore[${config.Component.displayName || config.Component.name}]`;
     return hoc
 
 }
