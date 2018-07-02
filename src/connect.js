@@ -6,13 +6,13 @@ export class Connect extends React.Component {
         super(props)
         const {config: {Component, didMount, willUnmount, construct}, componentProps} = this.props
         this.state = {}
-        this.ref = null
+        this.connectRef = null
         construct(this)
 
     }
 
     _ref = (ref) => {
-        this.ref = ref
+        this.connectRef = ref
     }
 
 
