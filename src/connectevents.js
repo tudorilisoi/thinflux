@@ -2,6 +2,10 @@ import _ from 'lodash'
 import React from 'react'
 import connect from './connect'
 
+function defaultTransform(emittedValue, hoc, evName) {
+    return {[evName]: emittedValue}
+}
+
 const connectevents = (store, Component, eventHandlerMap) => {
 
     const config = {
@@ -11,12 +15,15 @@ const connectevents = (store, Component, eventHandlerMap) => {
             hoc.state = {}
             Object.keys(eventHandlerMap).forEach(evName => {
                 const conf = eventHandlerMap[evName]
-                hoc.state[evName] = conf.initial
-                const transform = conf.transform || _.identity
+                hoc.state = {
+                    ...hoc.state,
+                    ...conf.initial
+                }
+                const transform = conf.transformFn || defaultTransform
                 const handler = emittedValue => {
-                    hoc.setState({
-                        [evName]: transform(emittedValue)
-                    })
+                    const newState = transform(emittedValue, hoc)
+                    console.log('NEW EV STATE', newState);
+                    hoc.setState(newState)
                 }
                 hoc.__eventhandlers[evName] = handler
                 store.eventBus.on(evName, handler)
