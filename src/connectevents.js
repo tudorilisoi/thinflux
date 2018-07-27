@@ -22,6 +22,10 @@ const connectevents = (store, Component, eventHandlerMap) => {
                 const transform = conf.transformFn || defaultTransform
                 const handler = emittedValue => {
                     const newState = transform(emittedValue, hoc)
+                    if (newState === null) {
+                        //noop
+                        return
+                    }
                     console.log('NEW EV STATE', newState);
                     hoc.setState(newState)
                 }
