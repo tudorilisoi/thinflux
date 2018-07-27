@@ -40,6 +40,8 @@ export class Connect extends React.Component {
 
     render() {
         const {config: {Component}, componentProps} = this.props
+
+        //merge props with store-connected props which is this.state
         const props = {...componentProps, ...this.state}
         return (<Component ref={this._ref} {...props} />)
     }
