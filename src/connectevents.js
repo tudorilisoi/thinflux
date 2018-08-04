@@ -26,7 +26,7 @@ const connectevents = (store, Component, eventHandlerMap) => {
                         //noop
                         return
                     }
-                    console.log('NEW EV STATE', newState);
+                    // console.log('NEW EV STATE', newState);
                     hoc.setState(newState)
                 }
                 hoc.__eventhandlers[evName] = handler
