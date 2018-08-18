@@ -2,20 +2,27 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import builtins from 'rollup-plugin-node-builtins';
 import babel from 'rollup-plugin-babel';
+import visualizer from 'rollup-plugin-visualizer';
+import { terser } from "rollup-plugin-terser";
 import pkg from './package.json';
 
 const browserPlugins = [
     resolve({browser: true}), // so Rollup can properly resolve cuid
     babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
+        babelrc: false,
+        presets: ['es2015-rollup'],
     }),
     // builtins(),
-    commonjs() // so Rollup can convert `ms` to an ES module
+    commonjs(),
+    visualizer(),
+    terser(),
 ]
 
 export default [
     // browser-friendly UMD build
     {
+        // external: Object.keys(globals),
         input: 'src/index.js',
         output: {
             name: 'thinflux',
