@@ -1,4 +1,9 @@
-import _ from "lodash";
+
+import cloneDeep from 'lodash-es/cloneDeep'
+import isArray from 'lodash-es/isArray'
+import isObject from 'lodash-es/isObject'
+import isEqual from 'lodash-es/isEqual'
+
 import cuid from "cuid";
 import scheduler from './timeout-scheduler.js'
 
@@ -16,14 +21,14 @@ function splitProp(pathStr) {
 }
 
 function mutate(val) {
-    return _.isArray(val) ? val.slice(0) :
-        _.isObject(val) ? Object.assign({}, val) : val
+    return isArray(val) ? val.slice(0) :
+        isObject(val) ? Object.assign({}, val) : val
 }
 
 class Store {
     constructor(initial = {}, opts = {}) {
 
-        this.jso = _.cloneDeep(initial)
+        this.jso = cloneDeep(initial)
 
         this.opts = opts
         this.defaults = initial
@@ -43,7 +48,7 @@ class Store {
         if (!pathStr) {
             return this.jso
         }
-        if (_.isArray(pathStr)) {
+        if (isArray(pathStr)) {
             const ret = {}
             pathStr.forEach(_pathStr => ret[_pathStr] = this.get(_pathStr))
             return ret
@@ -55,7 +60,7 @@ class Store {
         const s = this.getSegment(pathStr)
         const prev = s.value()
         if (opts.deepCompare) {
-            if (_.isEqual(prev, value)) {
+            if (isEqual(prev, value)) {
                 console.log('SET: deepCompare NOOP', pathStr, value);
                 return
             }

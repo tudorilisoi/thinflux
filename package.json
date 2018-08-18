@@ -1,6 +1,6 @@
 {
   "name": "thinflux",
-  "version": "0.1.7",
+  "version": "0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/tudorilisoi/thinflux"
@@ -8,13 +8,12 @@
   "description": "A reactive JS store for managing tree-shaped (deep, nested) state",
   "main": "./src/index.js",
   "module": "./src/index.js",
-  "browser": "./dist/browser/index.js",
+  "browser": "./dist/browser/thinflux.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist 2>&1; mkdir -p dist/browser",
-    "build-babel": "babel src --out-dir dist",
-    "build-browser": "browserify dist/index.js > dist/browser/index.js && uglifyjs dist/browser/index.js -c -m -o dist/browser/index.min.js",
-    "build": "npm run clean && npm run build-babel && npm run build-browser"
+    "build-rollup": "./node_modules/.bin/rollup -c",
+    "build": "npm run clean && npm run build-rollup"
   },
   "keywords": [
     "JS",
@@ -28,12 +27,13 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-react": "^6.24.1",
-    "browserify": "^16.2.2",
     "react": "^16.4.1",
     "rollup": "^0.64.1",
     "rollup-plugin-babel": "^3.0.7",
@@ -42,10 +42,11 @@
     "rollup-plugin-node-globals": "^1.2.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-terser": "^1.0.1",
-    "uglify-js": "^3.4.1"
+    "rollup-plugin-visualizer": "^0.9.0"
   },
   "dependencies": {
     "cuid": "^2.1.2",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "lodash-es": "^4.17.10"
   }
 }
