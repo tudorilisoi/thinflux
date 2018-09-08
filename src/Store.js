@@ -89,7 +89,7 @@ class Store {
         //const merged = {...current, ...valueObj}
         //return this.set(pathStr, merged, opts)
         Object.keys(valueObj).forEach(key => {
-            this.set(`${pathStr}.${key}`, valueObj[key])
+            this.set(`${pathStr}.${key}`, valueObj[key], opts)
         })
     }
 
