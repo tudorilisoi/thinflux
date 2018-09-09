@@ -1,4 +1,3 @@
-
 import cloneDeep from 'lodash-es/cloneDeep'
 import isArray from 'lodash-es/isArray'
 import isObject from 'lodash-es/isObject'
@@ -143,13 +142,12 @@ class Store {
         if (subs === undefined) {
             return
         }
-        scheduler.queue(() => {
-            subs.forEach(sub => {
+        subs.forEach(sub => {
+            scheduler.queue(() => {
                 const cbValue = this.get(sub.pathsArr)
                 sub.callback(cbValue)
                 console.log('NOTIFY', pathStr, sub.uid, cbValue);
             })
-
         })
     }
 

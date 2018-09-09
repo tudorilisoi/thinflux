@@ -16,8 +16,8 @@ const next = () => {
 }
 
 const tick = () => {
-    window.clearTimeout(timer)
-    timer = window.setTimeout(next, TIMEOUT)
+    window.cancelAnimationFrame(timer)
+    timer = window.requestAnimationFrame(next, TIMEOUT)
 }
 
 const queue = callback => {
