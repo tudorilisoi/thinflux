@@ -147,7 +147,7 @@ class Store {
                 const cbValue = this.get(sub.pathsArr)
                 sub.callback(cbValue)
                 console.log('NOTIFY', pathStr, sub.uid, cbValue);
-            })
+            }, sub.uid)
         })
     }
 

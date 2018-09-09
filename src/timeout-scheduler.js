@@ -3,27 +3,36 @@ const tasks = []
 const DEFAULT_TIMEOUT = 16
 let TIMEOUT = DEFAULT_TIMEOUT
 
-let timer
+let timers = {}
 const next = () => {
-    const cb = tasks.shift()
-    if (cb) {
+    const task = tasks.shift()
+    if (task) {
         //console.log('ASYNC QUEUE', tasks.length + 1);
-        cb()
+        task.callback()
     }
     if (tasks.length > 0) {
-        tick()
+        tick(tasks[0].uid)
     }
 }
 
-const tick = () => {
-    window.cancelAnimationFrame(timer)
-    timer = window.requestAnimationFrame(next, TIMEOUT)
+
+// const clear = window.clearTimeout.bind(window)
+// const set = window.setTimeout.bind(window)
+
+const clear = window.cancelAnimationFrame.bind(window)
+const set = window.requestAnimationFrame.bind(window)
+
+
+const tick = uid => {
+    console.log('TICK', uid, timers);
+    clear(timers[uid])
+    timers[uid] = set(next, TIMEOUT)
 }
 
-const queue = callback => {
-    tasks.push(callback)
+const queue = (callback, uid) => {
+    tasks.push({callback, uid})
     if (tasks.length === 1) {
-        tick()
+        tick(uid)
     }
 }
 
