@@ -24,7 +24,7 @@ const set = window.requestAnimationFrame.bind(window)
 
 
 const tick = uid => {
-    console.log('TICK', uid, timers);
+    // console.log('TICK', uid, timers);
     clear(timers[uid])
     timers[uid] = set(next, TIMEOUT)
 }
