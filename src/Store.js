@@ -136,6 +136,20 @@ class Store {
         return uid
     }
 
+    deepNotify(pathStr, levels, currLevel = 0) {
+        if (levels == currLevel) {
+            return
+        }
+        const v = this.get(pathStr)
+        const subPaths = Object.keys(v)
+        subPaths.forEach(sp => {
+            const deepPath = `${pathStr}.${sp}`
+            this.notify(deepPath)
+            this.deepNotify(deepPath, levels, ++currLevel)
+        })
+
+    }
+
     notify(pathStr) {
         const {subscriptionsByPath} = this
         const subs = subscriptionsByPath[pathStr]
