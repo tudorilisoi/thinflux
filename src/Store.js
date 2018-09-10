@@ -137,15 +137,17 @@ class Store {
     }
 
     deepNotify(pathStr, levels, currLevel = 0) {
-        if (levels == currLevel) {
+        if (levels === currLevel) {
             return
         }
         const v = this.get(pathStr)
         const subPaths = Object.keys(v)
+        let nextLevel = currLevel + 1
         subPaths.forEach(sp => {
             const deepPath = `${pathStr}.${sp}`
+            console.log('DEEP NOTIFY', deepPath, levels, currLevel);
             this.notify(deepPath)
-            this.deepNotify(deepPath, levels, ++currLevel)
+            this.deepNotify(deepPath, levels, nextLevel)
         })
 
     }
