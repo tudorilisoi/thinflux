@@ -23,6 +23,9 @@ const clear = window.cancelAnimationFrame.bind(window)
 const set = window.requestAnimationFrame.bind(window)
 
 
+// const set = fn => fn()
+// const clear = () => null
+
 const tick = uid => {
     // console.log('TICK', uid, timers);
     clear(timers[uid])

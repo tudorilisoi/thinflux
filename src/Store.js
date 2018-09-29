@@ -6,6 +6,8 @@ import isEqual from 'lodash-es/isEqual'
 import cuid from "cuid";
 import scheduler from './timeout-scheduler.js'
 
+let SEQ = 0
+
 function splitPath(pathStr) {
     return pathStr.split('.')
 }
@@ -60,7 +62,7 @@ class Store {
         const prev = s.value()
         if (opts.deepCompare) {
             if (isEqual(prev, value)) {
-                console.log('SET: deepCompare NOOP', pathStr, value);
+                console.log('SET: deepCompare NOOP', pathStr, value, prev);
                 return
             }
         }
@@ -108,6 +110,9 @@ class Store {
     unsubscribe(uid) {
         const {subscriptionsByPath, subscribers} = this
         const sub = subscribers[uid]
+        if (sub.derivedSub) {
+            this.unsubscribe(sub.derivedSub)
+        }
         delete subscribers[uid]
         for (let pathStr of sub.pathsArr) {
             console.log('UNSUB', uid, pathStr);
@@ -118,8 +123,38 @@ class Store {
         }
     }
 
+    derivedSubscribe(firstPath, derivedPathFn, callback, opts = {}) {
+        let sub, derivedSub, lastDerivedPath
+        const resubscribe = (values) => {
+            const derivedPath = derivedPathFn(values)
+            const isChanged = derivedPath !== lastDerivedPath
+            lastDerivedPath = derivedPath
+
+            if (isChanged) {
+                derivedSub && this.unsubscribe(derivedSub)
+            }
+
+            let derivedValue = null
+            if (derivedPath) {
+                derivedValue = this.get(derivedPath)
+                if (isChanged) {
+                    derivedSub = this.subscribe([derivedPath], resubscribe, opts)
+                    if (sub) {
+                        this.subscribers[sub].derivedSub = derivedSub
+                    }
+                }
+            }
+            console.log('DERIVED NOTIFY', sub, lastDerivedPath, derivedValue);
+            callback(derivedValue)
+        }
+        resubscribe(this.get(firstPath))
+        sub = this.subscribe([firstPath], resubscribe)
+        return sub
+    }
+
     subscribe(pathsArr, callback, opts = {}) {
-        const uid = cuid()
+        // const uid = cuid()
+        const uid = ++SEQ
         const sub = {
             uid,
             pathsArr,
@@ -141,6 +176,9 @@ class Store {
             return
         }
         const v = this.get(pathStr)
+        if (!isArray(v) && !isObject(v)) {
+            return
+        }
         const subPaths = Object.keys(v)
         let nextLevel = currLevel + 1
         subPaths.forEach(sp => {
