@@ -138,7 +138,7 @@ class Store {
             if (derivedPath) {
                 derivedValue = this.get(derivedPath)
                 if (isChanged) {
-                    derivedSub = this.subscribe([derivedPath], resubscribe, opts)
+                    derivedSub = this.subscribe([...firstPath, derivedPath], resubscribe, opts)
                     if (sub) {
                         this.subscribers[sub].derivedSub = derivedSub
                     }
@@ -148,7 +148,7 @@ class Store {
             callback(derivedValue)
         }
         resubscribe(this.get(firstPath))
-        sub = this.subscribe([firstPath], resubscribe)
+        sub = this.subscribe([firstPath], resubscribe, opts)
         return sub
     }
 
@@ -161,6 +161,7 @@ class Store {
             callback,
             opts
         }
+
         this.subscribers[uid] = sub
         const {subscriptionsByPath} = this
         pathsArr.forEach(pathStr => {
@@ -198,6 +199,14 @@ class Store {
         }
         subs.forEach(sub => {
             scheduler.queue(() => {
+                if (sub.opts.freeze) {
+                    if (sub.opts.freeze()) {
+                        // console.log('FROZEN', sub.uid, sub.pathsArr);
+                        return
+                    } else {
+                        // console.log('UNFROZEN', sub.uid, sub.pathsArr);
+                    }
+                }
                 const cbValue = this.get(sub.pathsArr)
                 sub.callback(cbValue)
                 console.log('NOTIFY', pathStr, sub.uid, cbValue);

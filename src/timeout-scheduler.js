@@ -1,3 +1,5 @@
+import {InteractionManager, BackHandler, Platform, View} from 'react-native'
+
 const tasks = []
 
 const DEFAULT_TIMEOUT = 16
@@ -16,11 +18,11 @@ const next = () => {
 }
 
 
-// const clear = window.clearTimeout.bind(window)
-// const set = window.setTimeout.bind(window)
+const clear = window.clearTimeout.bind(window)
+const set = window.setTimeout.bind(window)
 
-const clear = window.cancelAnimationFrame.bind(window)
-const set = window.requestAnimationFrame.bind(window)
+// const clear = window.cancelAnimationFrame.bind(window)
+// const set = window.requestAnimationFrame.bind(window)
 
 
 // const set = fn => fn()
@@ -33,10 +35,18 @@ const tick = uid => {
 }
 
 const queue = (callback, uid) => {
-    tasks.push({callback, uid})
-    if (tasks.length === 1) {
-        tick(uid)
-    }
+
+    // InteractionManager.runAfterInteractions(callback)
+
+    // TODO check perf, this is not queued
+    clear(timers[uid])
+    timers[uid] = set(callback, TIMEOUT)
+    return
+
+    // tasks.push({callback, uid})
+    // if (tasks.length === 1) {
+    //     tick(uid)
+    // }
 }
 
 const setDelay = millis => {
