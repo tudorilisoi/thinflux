@@ -148,7 +148,7 @@ class Store {
             callback(derivedValue)
         }
         resubscribe(this.get(firstPath))
-        sub = this.subscribe([firstPath], resubscribe, opts)
+        sub = this.subscribe(firstPath, resubscribe, opts)
         return sub
     }
 
