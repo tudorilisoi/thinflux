@@ -3,7 +3,7 @@ import connect from './connect'
 // import store from "src/store"
 
 
-const identity = value => value
+export const identity = value => value
 
 function mapKeyedPathsToStoreValues(store, pathsObj) {
     const propNames = Object.keys(pathsObj)
@@ -22,7 +22,7 @@ function normalizePaths(pathsObj, hoc) {
     return pathsObj
 }
 
-const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) => {
+const connectstore = (store, Component, pathsObj, mapValuesToProps = identity, opts = {}) => {
 
     const config = {
         Component: Component,
@@ -50,7 +50,7 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) =
                 if (newState !== null) {
                     hoc.setState(newState)
                 }
-            })
+            }, opts)
         },
         willUnmount: hoc => {
             hoc.subID && store.unsubscribe(hoc.subID)
@@ -61,5 +61,6 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity) =
     return hoc
 
 }
+
 
 export default connectstore
