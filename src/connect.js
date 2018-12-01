@@ -48,9 +48,20 @@ export class Connect extends React.Component {
 }
 
 export default function connect(config) {
-    const hoc = props => {
-        return (<Connect config={config} componentProps={props}/>)
+    let hoc
+    if (!config.usePureFunction) {
+        hoc = class _hoc extends React.PureComponent {
+            render() {
+                return (<Connect config={config} componentProps={this.props}/>)
+            }
+        }
+
+    } else {
+        hoc = props => {
+            return (<Connect config={config} componentProps={props}/>)
+        }
     }
+
     hoc.displayName = `connect[${config.Component.displayName || config.Component.name}]`;
     return hoc
 }
