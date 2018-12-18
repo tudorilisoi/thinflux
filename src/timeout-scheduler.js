@@ -39,11 +39,11 @@ const queue = (callback, uid) => {
     // InteractionManager.runAfterInteractions(callback)
 
     // TODO check perf, this is not queued
-    // clear(timers[uid])
-    // timers[uid] = set(callback, TIMEOUT)
-    // return
+    clear(timers[uid])
+    timers[uid] = set(callback, TIMEOUT)
+    return
 
-    callback()
+    // callback()
 
     // tasks.push({callback, uid})
     // if (tasks.length === 1) {
