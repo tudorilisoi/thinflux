@@ -110,6 +110,10 @@ class Store {
     unsubscribe(uid) {
         const {subscriptionsByPath, subscribers} = this
         const sub = subscribers[uid]
+        if (!sub) {
+            console.log('DOUBLE UNSUB', uid);
+            return
+        }
         if (sub.derivedSub) {
             this.unsubscribe(sub.derivedSub)
         }
