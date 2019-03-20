@@ -23,7 +23,6 @@ function normalizePaths(pathsObj, hoc) {
 }
 
 const connectstore = (store, Component, pathsObj, mapValuesToProps = identity, opts = {}) => {
-
     const config = {
         Component: Component,
         // connectComponent: ConnectStore,
@@ -37,6 +36,12 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity, o
             hoc.state = initial
         },
         didMount: hoc => {
+            const _opts = {...opts}
+            if (_opts.freeze) {
+                console.log('freeze', hoc.props.componentProps);
+                // debugger
+                _opts.freeze = _opts.freeze.bind(null, hoc)
+            }
             const paths = normalizePaths(pathsObj, hoc)
 
             hoc.subID = store.subscribe(Object.values(paths), values => {
@@ -50,7 +55,7 @@ const connectstore = (store, Component, pathsObj, mapValuesToProps = identity, o
                 if (newState !== null) {
                     hoc.setState(newState)
                 }
-            }, opts)
+            }, _opts)
         },
         willUnmount: hoc => {
             hoc.subID && store.unsubscribe(hoc.subID)
